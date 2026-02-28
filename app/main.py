@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
-
+from app.database import engine
+from app import models
+models.Base.metadata.create_all(bind=engine)
 from .database import Base, engine
 from .routers.auth import router as auth_router
 from .routers.notes import router as notes_router
