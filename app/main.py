@@ -10,7 +10,9 @@ from .routers.health import router as health_router  # dacă ai health
 
 
 app = FastAPI(title="Quiz Arena Pro API")
-
+@app.get("/")
+def root():
+    return {"status": "API running"}
 # creează tabele (ok pt sqlite / demo)
 Base.metadata.create_all(bind=engine)
 
