@@ -4,7 +4,11 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-engine = create_engine(DATABASE_URL)
+if DATABASE_URL:
+    engine = create_engine(DATABASE_URL, pool_pre_ping=True)
+else:
+    # fallback pentru dezvoltare locală
+    engine = create_engine("sqlite:///./quiz_arena.db", connect_args={"check_same_thread": False})
 
 SessionLocal = sessionmaker(
     autocommit=False,
@@ -13,3 +17,9 @@ SessionLocal = sessionmaker(
 )
 
 Base = declarative_base()
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
